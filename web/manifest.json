@@ -1,5 +1,6 @@
 {
     "name": "River Watch",
+    "id": "/",
     "short_name": "River Watch",
     "start_url": ".",
     "display": "standalone",
