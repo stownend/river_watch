@@ -39,18 +39,18 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialAppBuilder(builder: (context) {
         final colorService = Provider.of<ColorService>(context, listen: false);
-        final loggingService = Provider.of<LoggingService>(context, listen: false);
+        //final loggingService = Provider.of<LoggingService>(context, listen: false);
 
-        final logger = loggingService.getLogger(this);
-        logger.d("A test debug message");
-        logger.i("A test info message");
-        logger.e("A test error message");
+        //final logger = loggingService.getLogger(this);
+        // logger.d("A test debug message");
+        // logger.i("A test info message");
+        // logger.e("A test error message");
 
-        try {
-          throw Exception("Exceptions own message");
-        } catch (ex, st) {
-          logger.e("A test error message with error", ex, st);
-        }
+        // try {
+        //   throw Exception("Exceptions own message");
+        // } catch (ex, st) {
+        //   logger.e("A test error message with error", ex, st);
+        // }
         
         return MaterialApp(
           theme: ThemeData(primarySwatch: MaterialColor(0xFF2196F3, colorService.colorSwatchShades)),

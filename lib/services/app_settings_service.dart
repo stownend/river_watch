@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppSettingsService {
   
-  final String appName = "Skeletal App";
+  final String appName = "River Watch";
   final String author = "Steve Townend";
-  final String appUrl = "https//skeletal.app.com";
+  final String appUrl = "https://smt-flutter-framework.web.app/";
   final String appLogo = "images/icon.png";
 
   // Icon not used at present, prefer appLogo image

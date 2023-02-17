@@ -17,7 +17,7 @@ class AboutPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${appSettingsService.appLogo}"),
+            Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${appSettingsService.appLogo}", width: 96,),
             const SizedBox(height: 64),
             Text(
               appSettingsService.appName,
@@ -30,7 +30,11 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             Text(
-              'Available at: ${appSettingsService.appUrl}',
+              'Available at:',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              appSettingsService.appUrl,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
