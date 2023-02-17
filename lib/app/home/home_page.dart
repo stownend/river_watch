@@ -13,13 +13,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loggingService = Provider.of<LoggingService>(context, listen: false);
 
-    List<String> carouselImages = [
-      "images/carousel/fishing.png",
-      "images/carousel/boating.png",
-      "images/carousel/camping.png",
-      "images/carousel/canoeing.png",
-      "images/carousel/hiking.png",
-      "images/carousel/sailing.png",
+    List<CarouselImage> carouselImages = [
+      CarouselImage("Fishing", "images/carousel/fishing.png"),
+      CarouselImage("Boating", "images/carousel/boating.png"),
+      CarouselImage("Camping", "images/carousel/camping.png"),
+      CarouselImage("Canoeing", "images/carousel/canoeing.png"),
+      CarouselImage("Hiking", "images/carousel/hiking.png"),
+      CarouselImage("Sailing", "images/carousel/sailing.png"),
     ];
 
     final logger = loggingService.getLogger(this);
@@ -35,23 +35,38 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 400.0,
-                  enlargeCenterPage: true,
-                  autoPlay: true,
-                  viewportFraction: 1.0
+              Opacity(opacity: 0.6,  
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 400.0,
+                    enlargeCenterPage: false,
+                    autoPlay: true,
+                    viewportFraction: 1.0
+                  ),
+                  items: carouselImages.map<Widget>((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: FittedBox(
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${i.imageName}",),
+                                )
+                              )
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              i.displayName,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
-                items: carouselImages.map<Widget>((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Opacity(opacity: 0.6, child: Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}$i",)),
-                      );
-                    },
-                  );
-                }).toList(),
               ),
               const SizedBox(height: 32),
                 Text(
@@ -67,3 +82,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class CarouselImage {
+  String displayName;
+  String imageName;
+
+  CarouselImage(this.displayName, this.imageName);
+}
