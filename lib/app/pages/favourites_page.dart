@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../home/my_scaffold.dart';
 
-class MySitesPage extends StatelessWidget {
-  const MySitesPage({super.key});
+class FavouritesPage extends StatelessWidget {
+  const FavouritesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
 
     return MyScaffold(
-      navName: "My Sites",
+      navName: "Favourites",
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "My Sites...",
+              "Favourites...",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],

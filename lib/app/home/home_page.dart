@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
                 Text(
-                  'Keep a check on the rivers that you frequent for your leisure or work activities. \n\nYou can easily browse by location or can search by name or proximity. \n\nSign In to set high and low level thresholds for your favourite locations and then be alerted whenever those thresholds are breached.',
+                  'Keep a check on the rivers that you frequent for your leisure or work activities. \n\nYou can easily browse by location or can search by name or proximity. \n\nSign In to select favourite locations then set high and low level thresholds that will send notifications whenever those thresholds are breached.',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
             ],

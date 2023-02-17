@@ -13,7 +13,7 @@ import 'services/color_service.dart';
 import 'services/logging_service.dart';
 import 'app/pages/browse_page.dart';
 import 'app/pages/search_page.dart';
-import 'app/pages/my_sites_page.dart';
+import 'app/pages/favourites_page.dart';
 
 void main() {
   Logger.level = kDebugMode ? Level.verbose :  Level.info;
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
 
             "/browse": (_) => const BrowsePage(),
             "/search": (_) => const SearchPage(),
-            "/mySites": (_) => const MySitesPage(),
+            "/favourites": (_) => const FavouritesPage(),
           }
         );
       }),
