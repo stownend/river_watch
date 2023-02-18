@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:provider/provider.dart';
-
-import '../../services/logging_service.dart';
 import 'my_scaffold.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,7 +8,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loggingService = Provider.of<LoggingService>(context, listen: false);
 
     List<CarouselImage> carouselImages = [
       CarouselImage("Fishing", "images/carousel/fishing.png"),
@@ -21,11 +17,6 @@ class HomePage extends StatelessWidget {
       CarouselImage("Hiking", "images/carousel/hiking.png"),
       CarouselImage("Sailing", "images/carousel/sailing.png"),
     ];
-
-    final logger = loggingService.getLogger(this);
-    logger.i("kDebugMode: $kDebugMode");
-    logger.i("kIsWeb    : $kIsWeb");
-    logger.i("Images in ${(kDebugMode && kIsWeb)?"":"assets/"}${carouselImages[0]}");
 
     return MyScaffold(
       navName: "Home",

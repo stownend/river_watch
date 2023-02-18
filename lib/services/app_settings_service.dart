@@ -6,6 +6,7 @@ class AppSettingsService {
   final String author = "Steve Townend";
   final String appUrl = "https://smt-flutter-framework.web.app/";
   final String appLogo = "images/icon.png";
+  final String apiBase = "https://services.riverwatchapp.co.uk/"; // "http://localhost:55275/";
 
   // Icon not used at present, prefer appLogo image
   static const IconData iconData = Icons.person_2;
@@ -19,6 +20,11 @@ class AppSettingsService {
     NavigationRoute("Favourites", "/favourites", const Icon(Icons.star_outline)),
   ];
 
+  final apiEndpoints = {
+    "Browse" : "api/browse"
+  };
+
+  //#region Nav bar methods
   int getRouteIndexByUiName(String nameToFind) {
 
     int routeIndex = 0;
@@ -52,6 +58,8 @@ class AppSettingsService {
 
     return items;
   }
+  //#endregion Nav bar methods
+  
 
 }
 

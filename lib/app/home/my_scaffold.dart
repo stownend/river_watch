@@ -79,7 +79,7 @@ class MyScaffold extends StatelessWidget {
           items: navBarItems,
           onTap: (index)
           {
-              Navigator.pushNamed(context, appSettingsService.getRouteByIndex(index).routeName, arguments: "Arg sent from MyScaffold");
+              Navigator.pushNamed(context, appSettingsService.getRouteByIndex(index).routeName, arguments: "");
           },
         ),
       body: body

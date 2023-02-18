@@ -8,14 +8,15 @@ import 'app/TestPages/rest_api.dart';
 import 'app/home/home_page.dart';
 import 'app/home/about_page.dart';
 import 'app/material_app_builder.dart';
+import 'ioc.dart';
 import 'services/app_settings_service.dart';
 import 'services/color_service.dart';
-import 'services/logging_service.dart';
 import 'app/pages/browse_page.dart';
 import 'app/pages/search_page.dart';
 import 'app/pages/favourites_page.dart';
 
 void main() {
+  getServices();
   Logger.level = kDebugMode ? Level.verbose :  Level.info;
   runApp(const MyApp());
 } 
@@ -33,9 +34,9 @@ class MyApp extends StatelessWidget {
         Provider<ColorService>(
           create: (_) => ColorService(),
         ),
-        Provider<LoggingService>(
-          create: (_) => LoggingService(),
-        )
+        // Provider<LoggingService>(
+        //   create: (_) => LoggingService(),
+        // )
       ],
       child: MaterialAppBuilder(builder: (context) {
         final colorService = Provider.of<ColorService>(context, listen: false);
