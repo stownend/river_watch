@@ -9,11 +9,12 @@ class MyScaffold extends StatelessWidget {
   final Widget body;
   final String? navName;
 
-
   @override
   Widget build(BuildContext context) {
     final appSettingsService = Provider.of<AppSettingsService>(context, listen: false);
     //final colorService = Provider.of<ColorService>(context, listen: false);
+
+    var navBarItems = appSettingsService.getNavigationBarItems();
 
     return Scaffold(
 
@@ -75,25 +76,7 @@ class MyScaffold extends StatelessWidget {
           //selectedItemColor: Colors.amberAccent,
           currentIndex: appSettingsService.getRouteIndexByUiName(navName?? "Home"),
 
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: appSettingsService.getRouteByIndex(0).icon,
-              label: appSettingsService.getRouteByIndex(0).uiName,
-            ),
-            BottomNavigationBarItem(
-              icon: appSettingsService.getRouteByIndex(1).icon,
-              label: appSettingsService.getRouteByIndex(1).uiName,
-            ),
-            BottomNavigationBarItem(
-              icon: appSettingsService.getRouteByIndex(2).icon,
-              label: appSettingsService.getRouteByIndex(2).uiName,
-            ),
-            BottomNavigationBarItem(
-              icon: appSettingsService.getRouteByIndex(3).icon,
-              label: appSettingsService.getRouteByIndex(3).uiName,
-            ),
-          ],
-
+          items: navBarItems,
           onTap: (index)
           {
               Navigator.pushNamed(context, appSettingsService.getRouteByIndex(index).routeName, arguments: "Arg sent from MyScaffold");

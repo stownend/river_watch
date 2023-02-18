@@ -37,6 +37,22 @@ class AppSettingsService {
     return navigationPages[index];
   }
 
+  List<BottomNavigationBarItem> getNavigationBarItems() {
+
+    List<BottomNavigationBarItem> items = [];
+
+    for (var page in navigationPages) {
+      items.add(
+        BottomNavigationBarItem(
+          icon: page.icon,
+          label: page.uiName,
+        )
+      );
+    }
+
+    return items;
+  }
+
 }
 
 class NavigationRoute {
