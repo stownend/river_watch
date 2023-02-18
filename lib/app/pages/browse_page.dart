@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import '../../services/app_settings_service.dart';
 import '../../models/browse_list.dart';
 import '../../services/browse_service.dart';
 
@@ -17,6 +18,7 @@ class BrowsePage extends StatefulWidget {
 class BrowsePageState extends State<BrowsePage> {
   late Future<BrowseList?> _regions = Future<BrowseList?>.value(null);
 
+  final _appSettingsService = getIt.get<AppSettingsService>();
   final _loggingService = getIt.get<LoggingService>();
   final _browseService = getIt.get<BrowseService>();
   
@@ -76,10 +78,13 @@ class BrowsePageState extends State<BrowsePage> {
                         shrinkWrap: true,
                         itemCount: snapshot.data!.names.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            height: 35,
-                            color: Colors.white,
-                            child: Text(snapshot.data!.names[index], style: Theme.of(context).textTheme.titleLarge),
+                          return Card(
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.pushNamed(context, _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, arguments: snapshot.data!.names[index]);
+                              },
+                              title: Text(snapshot.data!.names[index])
+                            )
                           );
                         }
                       )
