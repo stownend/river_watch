@@ -24,12 +24,14 @@ class BrowseViewModel extends ChangeNotifier
   BrowseList? _browseList;
   Failure? _browseError;
   String _parents = "";
+  bool _atStations = false;
 
   bool get loading => _loading;
   bool get hasError => _hasError;
   BrowseList get browseList => _browseList??BrowseList();
   Failure get browseError => _browseError??Failure();
   String get parents => _parents;
+  bool get atStations => _atStations;
 
   setLoading(bool loading) async {
     _loading = loading;
@@ -53,6 +55,7 @@ class BrowseViewModel extends ChangeNotifier
       _parents = parents;
 
       List<String> parentList = parents == "" ? [] : parents.split('|');
+      _atStations = parentList.length == 4;
 
       var browseList = await _browseService.getBrowseList(parentList);
       setBrowseList(browseList);

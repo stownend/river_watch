@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common_services/app_settings_service.dart';
+import '../../common_services/logging_service.dart';
 import '../../ioc.dart';
 import '../browse/view_models/browse_view_model.dart';
 
@@ -10,10 +11,12 @@ class BrowseListRow extends StatelessWidget {
   final BrowseViewModel browseViewModel;
 
   final _appSettingsService = getIt.get<AppSettingsService>();
+  final _loggingService = getIt.get<LoggingService>();
 
   @override
   Widget build(BuildContext context) {
 
+    var logger = _loggingService.getLogger(this);
     var browseList = browseViewModel.browseList;
 
     return Column(
@@ -31,7 +34,13 @@ class BrowseListRow extends StatelessWidget {
               return Card(
                 child: ListTile(
                   onTap: () {
-                    Navigator.pushNamed(context, _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, arguments: browseViewModel.getNewParents(browseList.names[index]));
+
+                    if (browseViewModel.atStations) {
+                      logger.i("Would now navigate to station: ${browseList.names[index]}");
+                    } else {
+                      Navigator.pushNamed(context, _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, arguments: browseViewModel.getNewParents(browseList.names[index]));
+                    }                   
+
                   },
                   title: Text(browseList.names[index])
                 )
