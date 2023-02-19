@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../home/my_scaffold.dart';
+import '../components/app_bar_and_nav_bar_scaffold.dart';
 
 class FavouritesPage extends StatelessWidget {
   const FavouritesPage({super.key});
@@ -8,7 +8,7 @@ class FavouritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MyScaffold(
+    return AppBarAndNavBarScaffold(
       navName: "Favourites",
       body: Center(
         child: Column(

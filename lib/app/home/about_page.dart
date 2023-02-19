@@ -1,31 +1,33 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../services/app_settings_service.dart';
-import 'my_scaffold.dart';
+import '../../ioc.dart';
+import '../../common_services/app_settings_service.dart';
+import '../components/app_bar_and_nav_bar_scaffold.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final appSettingsService = Provider.of<AppSettingsService>(context, listen: false);
+    final _appSettingsService = getIt.get<AppSettingsService>();
 
-    return MyScaffold(
+    return AppBarAndNavBarScaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${appSettingsService.appLogo}", width: 96,),
+            Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${_appSettingsService.appLogo}", width: 96,),
             const SizedBox(height: 64),
             Text(
-              appSettingsService.appName,
+              _appSettingsService.appName,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 32),
             Text(
-              'by ${appSettingsService.author}',
+              'by ${_appSettingsService.author}',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 32),
@@ -34,7 +36,7 @@ class AboutPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             Text(
-              appSettingsService.appUrl,
+              _appSettingsService.appUrl,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],

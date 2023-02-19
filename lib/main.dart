@@ -1,18 +1,19 @@
 
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import 'app/TestPages/rest_api.dart';
+import 'app/browse/view_models/browse_view_model.dart';
 import 'app/home/home_page.dart';
 import 'app/home/about_page.dart';
 import 'app/material_app_builder.dart';
 import 'ioc.dart';
-import 'services/app_settings_service.dart';
-import 'services/color_service.dart';
-import 'app/pages/browse_page.dart';
-import 'app/pages/search_page.dart';
+import 'common_services/color_service.dart';
+import 'app/browse/views/browse_view.dart';
+import 'app/search/views/search_view.dart';
 import 'app/pages/favourites_page.dart';
 
 void main() {
@@ -28,21 +29,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AppSettingsService>(
-          create: (_) => AppSettingsService(),
+        ChangeNotifierProvider<BrowseViewModel>(
+          create: (_) => BrowseViewModel(),
         ),
-        Provider<ColorService>(
-          create: (_) => ColorService(),
-        ),
-        // Provider<LoggingService>(
-        //   create: (_) => LoggingService(),
-        // )
       ],
       child: MaterialAppBuilder(builder: (context) {
-        final colorService = Provider.of<ColorService>(context, listen: false);
-        //final loggingService = Provider.of<LoggingService>(context, listen: false);
+        var _colorService = getIt.get<ColorService>();
+        // final _loggingService = getIt.get<LoggingService>();
 
-        //final logger = loggingService.getLogger(this);
+        // final logger = loggingService.getLogger(this);
         // logger.d("A test debug message");
         // logger.i("A test info message");
         // logger.e("A test error message");
@@ -54,16 +49,15 @@ class MyApp extends StatelessWidget {
         // }
         
         return MaterialApp(
-          theme: ThemeData(primarySwatch: MaterialColor(0xFF2196F3, colorService.colorSwatchShades)),
+          theme: ThemeData(primarySwatch: MaterialColor(0xFF2196F3, _colorService.colorSwatchShades)),
           debugShowCheckedModeBanner: false,
           initialRoute: "/home",
           routes: {
             "/home": (_) => const HomePage(),
-            "/testRestAPI": (_) => const RestApi(),
             "/about": (_) => const AboutPage(),
 
-            "/browse": (_) => const BrowsePage(),
-            "/search": (_) => const SearchPage(),
+            "/browse": (_) => const BrowseView(),
+            "/search": (_) => const SearchView(),
             "/favourites": (_) => const FavouritesPage(),
           }
         );

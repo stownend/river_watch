@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'my_scaffold.dart';
+import '../components/app_bar_and_nav_bar_scaffold.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
       CarouselImage("Sailing", "images/carousel/sailing.png"),
     ];
 
-    return MyScaffold(
+    return AppBarAndNavBarScaffold(
       navName: "Home",
       body: Center(
         child: Padding(

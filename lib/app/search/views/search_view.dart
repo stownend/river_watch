@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../home/my_scaffold.dart';
+import '../../components/app_bar_and_nav_bar_scaffold.dart';
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+class SearchView extends StatelessWidget {
+  const SearchView({super.key});
 
   @override
   Widget build(BuildContext context) {
 
-    return MyScaffold(
+    return AppBarAndNavBarScaffold(
       navName: "Search",
       body: Center(
         child: Column(
