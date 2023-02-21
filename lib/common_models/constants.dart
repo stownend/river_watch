@@ -1,7 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 //#region APIs
-const String API_BASE = "https://services.riverwatchapp.co.uk"; // "http://localhost:55275";
+const String API_BASE = "https://services.riverwatchapp.co.uk";
+//const String API_BASE = "http://localhost:55275";
 
 const String API_BROWSE = "api/browse";
 const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";

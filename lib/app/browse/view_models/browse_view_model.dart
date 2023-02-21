@@ -23,14 +23,12 @@ class BrowseViewModel extends ChangeNotifier
   bool _hasError = false;
   BrowseList? _browseList;
   Failure? _browseError;
-  String _parents = "";
   bool _atStations = false;
 
   bool get loading => _loading;
   bool get hasError => _hasError;
   BrowseList get browseList => _browseList??BrowseList();
   Failure get browseError => _browseError??Failure();
-  String get parents => _parents;
   bool get atStations => _atStations;
 
   setLoading(bool loading) async {
@@ -52,7 +50,6 @@ class BrowseViewModel extends ChangeNotifier
     setLoading(true);
 
     try {
-      _parents = parents;
 
       List<String> parentList = parents == "" ? [] : parents.split('|');
       _atStations = parentList.length == 4;
@@ -67,9 +64,5 @@ class BrowseViewModel extends ChangeNotifier
     }
 
     setLoading(false);
-  }
-
-  String getNewParents(String parent) {
-    return "$_parents${_parents.isEmpty ? "" : "|"}$parent";
   }
 }

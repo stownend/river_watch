@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+//import '../../common_services/logging_service.dart';
 import '../../ioc.dart';
 import '../../common_services/app_settings_service.dart';
 
@@ -14,7 +15,9 @@ class AppBarAndNavBarScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _appSettingsService = getIt.get<AppSettingsService>();
+    // final _loggingService = getIt.get<LoggingService>();
 
+    // final _logger = _loggingService.getLogger(this);
     //final colorService = Provider.of<ColorService>(context, listen: false);
 
     var navBarItems = _appSettingsService.getNavigationBarItems();
@@ -23,6 +26,13 @@ class AppBarAndNavBarScaffold extends StatelessWidget {
 
       appBar: AppBar(
         title: Text("${_appSettingsService.appName} ${navName != null ? ": $navName" : ""}"),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     _logger.i("Back was pressed!!!");
+        //     Navigator.of(context).pop(true);
+        //   }, 
+        // ),
         actions: <Widget>[
           PopupMenuButton(
             // add icon, by default "3 dot" icon
@@ -56,11 +66,9 @@ class AppBarAndNavBarScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
           iconSize: 24,
 
-          //backgroundColor: MaterialColor(0xFF2196F3, colorService.colorSwatchShades),
           type: BottomNavigationBarType.fixed, // Prevents background going to white when "shifting" e.g. more than 3 icons
 
           unselectedItemColor: Colors.grey[500],
-          //selectedItemColor: Colors.amberAccent,
           currentIndex: _appSettingsService.getRouteIndexByUiName(navName?? "Home"),
 
           items: navBarItems,

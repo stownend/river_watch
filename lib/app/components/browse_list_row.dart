@@ -6,9 +6,10 @@ import '../../ioc.dart';
 import '../browse/view_models/browse_view_model.dart';
 
 class BrowseListRow extends StatelessWidget {
-  BrowseListRow({super.key, required this.browseViewModel});
+  BrowseListRow({super.key, required this.browseViewModel, required this.initialParents});
 
   final BrowseViewModel browseViewModel;
+  final String initialParents;
 
   final _appSettingsService = getIt.get<AppSettingsService>();
   final _loggingService = getIt.get<LoggingService>();
@@ -34,11 +35,15 @@ class BrowseListRow extends StatelessWidget {
               return Card(
                 child: ListTile(
                   onTap: () {
-
+                    //await Future.delayed(const Duration(seconds: 5));
+                    
                     if (browseViewModel.atStations) {
                       logger.i("Would now navigate to station: ${browseList.names[index]}");
                     } else {
-                      Navigator.pushNamed(context, _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, arguments: browseViewModel.getNewParents(browseList.names[index]));
+                      Navigator.pushNamed(
+                        context, 
+                        _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, 
+                        arguments: "$initialParents${initialParents != "" ? "|" : ""}${browseList.names[index]}");
                     }                   
 
                   },

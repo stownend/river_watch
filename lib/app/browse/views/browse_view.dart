@@ -18,6 +18,8 @@ class BrowseViewState extends State<BrowseView> {
 
   late BrowseViewModel _viewModel;
 
+  late String _parents = "";
+
   @override
   void initState() {
 
@@ -26,9 +28,9 @@ class BrowseViewState extends State<BrowseView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 
           var args = ModalRoute.of(context)!.settings.arguments;
-          String parents = args == null ? "" : args as String;
+          _parents = args == null ? "" : args as String;
 
-          _viewModel.getBrowseList(parents);
+          _viewModel.getBrowseList(_parents);
     });
 
     super.initState();
@@ -61,7 +63,7 @@ class BrowseViewState extends State<BrowseView> {
       return AppError(appError: browseViewModel.browseError); 
     }
 
-    return BrowseListRow(browseViewModel: browseViewModel);
+    return BrowseListRow(browseViewModel: browseViewModel, initialParents: _parents);
   }
 
 }
