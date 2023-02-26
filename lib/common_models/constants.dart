@@ -6,6 +6,8 @@ const String API_BASE = "https://services.riverwatchapp.co.uk";
 
 const String API_BROWSE = "api/browse";
 const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";
+const String API_SEARCH_STATIONS = "api/browse/searchAll";
+
 //#endregion APIs
 
 //#region Errors

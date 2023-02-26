@@ -20,50 +20,53 @@ class HomePage extends StatelessWidget {
 
     return AppBarAndNavBarScaffold(
       navName: "Home",
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, right:15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Opacity(opacity: 0.6,  
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: 400.0,
-                    enlargeCenterPage: false,
-                    autoPlay: true,
-                    viewportFraction: 1.0
-                  ),
-                  items: carouselImages.map<Widget>((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: FittedBox(
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${i.imageName}",),
-                                )
-                              )
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              i.displayName,
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: 1,
+                      height: 400.0,
+                      enlargeCenterPage: false,
+                      autoPlay: true,
+                      viewportFraction: 1.0
+                    ),
+                    items: carouselImages.map<Widget>((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Column(
+                            children: <Widget>[
+                              // Expanded(
+                              //   child: FittedBox(
+                              //     child: SizedBox(
+//                                    width: MediaQuery.of(context).size.width,
+//                                    height: MediaQuery.of(context).size.height,
+//                                    child: Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${i.imageName}",),
+                                    Image.asset("${(kDebugMode && kIsWeb)?"":"assets/"}${i.imageName}", height: 320),
+                              //     )
+                              //   )
+                              // ),
+                              const SizedBox(height: 12),
+                              Text(
+                                i.displayName,
+                                style: Theme.of(context).textTheme.headlineLarge,
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }).toList(),
+                  )
               ),
               const SizedBox(height: 32),
-                Text(
-                  'Keep a check on the rivers that you frequent for your leisure or work activities. \n\nYou can easily browse by location or can search by name or proximity. \n\nSign In to select favourite locations then set high and low level thresholds that will send notifications whenever those thresholds are breached.',
+              Text(
+                'Keep a check on the rivers that you frequent for your leisure or work activities. \n\nYou can easily browse by location or can search by name or proximity. \n\nSign In to select favourite locations then set high and low level thresholds that will send notifications whenever those thresholds are breached.',
                   style: Theme.of(context).textTheme.titleMedium,
-                ),
+              ),
             ],
           ),
         )

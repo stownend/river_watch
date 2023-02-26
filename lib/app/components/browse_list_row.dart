@@ -3,22 +3,30 @@ import 'package:flutter/material.dart';
 import '../../common_services/app_settings_service.dart';
 import '../../common_services/logging_service.dart';
 import '../../ioc.dart';
-import '../browse/view_models/browse_view_model.dart';
+import '../browse/models/browse_list.dart';
+import '../browse/repositories/browse_service.dart';
 
+// ignore: must_be_immutable
 class BrowseListRow extends StatelessWidget {
-  BrowseListRow({super.key, required this.browseViewModel, required this.initialParents});
+  BrowseListRow({super.key, required this.browseList, required this.initialParents});
 
-  final BrowseViewModel browseViewModel;
+  //final BrowseViewModel browseViewModel;
   final String initialParents;
+  final BrowseList browseList;
+
+  final _browseService = getIt.get<BrowseService>();
 
   final _appSettingsService = getIt.get<AppSettingsService>();
   final _loggingService = getIt.get<LoggingService>();
 
+  late BuildContext _ctx;
+
   @override
   Widget build(BuildContext context) {
 
+    // ignore: unused_local_variable
     var logger = _loggingService.getLogger(this);
-    var browseList = browseViewModel.browseList;
+    _ctx = context;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -34,16 +42,28 @@ class BrowseListRow extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: ListTile(
-                  onTap: () {
+                  onTap: () async {
                     //await Future.delayed(const Duration(seconds: 5));
                     
-                    if (browseViewModel.atStations) {
-                      logger.i("Would now navigate to station: ${browseList.names[index]}");
-                    } else {
+                    List<String> parents = initialParents == "" ? [] : initialParents.split('|');
+
+                    if (parents.length == 4) {
                       Navigator.pushNamed(
                         context, 
+                        "/station", 
+                        arguments: browseList.ids[index]);
+
+                    } else {
+
+                      var newParents = "$initialParents${initialParents != "" ? "|" : ""}${browseList.names[index]}";
+
+                      await _browseService.readStationsInRiver(newParents);
+                      
+                      Navigator.pushNamed(
+                        getContext(), 
                         _appSettingsService.getRouteByIndex(_appSettingsService.getRouteIndexByUiName("Browse")).routeName, 
-                        arguments: "$initialParents${initialParents != "" ? "|" : ""}${browseList.names[index]}");
+                        arguments: newParents
+                      );
                     }                   
 
                   },
@@ -55,6 +75,12 @@ class BrowseListRow extends StatelessWidget {
         )
       ],
     );
+
   }
+
+  getContext () {
+    return _ctx;
+  }
+
 
 }

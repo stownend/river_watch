@@ -35,7 +35,7 @@ class ApiService {
     } on http.ClientException {
       return Failure(code: ERR_NO_INTERNET, errorResponse: "No internet");
     } on FormatException {
-      return Failure(code: ERR_NO_INTERNET, errorResponse: "Invalid format");
+      return Failure(code: ERR_INVALID_FORMAT, errorResponse: "Invalid format");
     } catch (ex, st) {
       _logger.e("Unknown error calling $url", ex, st);
       return Failure(code: ERR_UNKNOWN_ERROR, errorResponse: "Unknown error getting data");

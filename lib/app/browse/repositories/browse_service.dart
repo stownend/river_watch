@@ -40,6 +40,131 @@ class BrowseService{
     
   }
 
+  BrowseList getSimpleBrowseList(List<String> parents) {
+
+    var browseList = BrowseList();
+
+    for (var parent in parents) {
+      browseList.breadCrumbs += browseList.breadCrumbs == "" ? parent : ", $parent";
+    }
+
+    if (parents.isEmpty)
+    {
+      browseList.scope = "Regions";
+
+      for (var region in _hierarchy)
+      {
+          browseList.names.add(region.name);
+      }
+    } 
+    else if (parents.length == 1)
+    {
+      browseList.scope = "Areas";
+
+      try
+      {
+        for (var area in _hierarchy.firstWhere((r) => r.name.toUpperCase() == parents[0].toUpperCase()).areas)
+        {
+          browseList.names.add(area.name);
+        }
+      }
+      catch (ex, st)
+      {
+        _logger.e("Could not find Region ${parents[0]}", ex, st);
+        rethrow;
+      }
+    } 
+    else if (parents.length == 2) 
+    {
+      browseList.scope = "Catchments";
+
+      try
+      {
+        for (var catchment in _hierarchy
+                                .firstWhere((r) => r.name.toUpperCase() == parents[0].toUpperCase()).areas
+                                .firstWhere((a) => a.name.toUpperCase() == parents[1].toUpperCase()).catchments)
+        {
+          browseList.names.add(catchment.name);
+        }
+      }
+      catch (ex, st)
+      {
+        _logger.e("Could not find Area ${parents[1]}", ex, st);
+        rethrow;
+      }
+    }
+    else if (parents.length == 3) 
+    {
+      browseList.scope = "Rivers";
+
+      try
+      {
+        for (var river in _hierarchy
+                            .firstWhere((r) => r.name.toUpperCase() == parents[0].toUpperCase()).areas
+                            .firstWhere((a) => a.name.toUpperCase() == parents[1].toUpperCase()).catchments
+                            .firstWhere((c) => c.name.toUpperCase() == parents[2].toUpperCase()).rivers)
+        {
+          browseList.names.add(river.name);
+        }
+      }
+      catch (ex, st)
+      {
+        _logger.e("Could not find Catchment ${parents[2]}", ex, st);
+        rethrow;
+      }
+    }
+
+    return browseList;
+
+  }
+
+  Future readStationsInRiver(String parentsAsString) async {
+
+    List<String> parents = parentsAsString == "" ? [] : parentsAsString.split('|');
+
+    if (parents.length != 4) {
+      return;
+    }
+
+    try {
+      var river = _hierarchy
+                    .firstWhere((r) => r.name.toUpperCase() == parents[0].toUpperCase()).areas
+                    .firstWhere((a) => a.name.toUpperCase() == parents[1].toUpperCase()).catchments
+                    .firstWhere((c) => c.name.toUpperCase() == parents[2].toUpperCase()).rivers
+                    .firstWhere((r) => r.name.toUpperCase() == parents[3].toUpperCase());
+
+      var stationResponse = await _getStationsInRiver(river.id);
+
+      if (stationResponse is Success) {
+        _stations = stationResponse.response as List<StationHeader>;  
+      }
+
+      if (stationResponse is Failure) {
+        throw(stationResponse.errorResponse);
+      }
+    }
+    catch (ex, st)
+    {
+      _logger.e("Could not find Sites in River ${parents[3].toUpperCase()}", ex, st);
+      rethrow;
+    }
+  }
+
+  BrowseList getSimpleStationList() {
+
+    BrowseList browseList = BrowseList();
+
+    browseList.scope = "Sites";
+
+    for (var station in _stations)
+    {
+        browseList.names.add(station.label);
+        browseList.ids.add(station.id);
+    }
+
+    return browseList;
+  }
+
   Future<BrowseList> getBrowseList(List<String> parents) async {
 
     var browseList = BrowseList();

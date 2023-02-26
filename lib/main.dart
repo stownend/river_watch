@@ -6,10 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
+import 'app/browse/repositories/browse_service.dart';
 import 'app/browse/view_models/browse_view_model.dart';
 import 'app/home/home_page.dart';
 import 'app/home/about_page.dart';
 import 'app/material_app_builder.dart';
+import 'app/search/view_models/search_view_model.dart';
+import 'app/station/views/station_view.dart';
+import 'common_services/logging_service.dart';
 import 'ioc.dart';
 import 'common_services/color_service.dart';
 import 'app/browse/views/browse_view.dart';
@@ -19,16 +23,32 @@ import 'app/pages/favourites_page.dart';
 void main() {
   getServices();
   Logger.level = kDebugMode ? Level.verbose :  Level.info;
-  runApp(const MyApp());
+  runApp(MyApp());
 } 
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-   const MyApp({super.key});
+   MyApp({super.key});
   
+  late BrowseService _browseService;
+  late LoggingService _loggingService;
+  late Logger _logger;
+
   @override
   Widget build(BuildContext context) {
+
+    _browseService = getIt.get<BrowseService>();
+    _loggingService = getIt.get<LoggingService>();
+    
+    _logger = _loggingService.getLogger(this);
+
+    getBrowseList();
+
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<SearchViewModel>(
+          create: (_) => SearchViewModel(),
+        ),
         ChangeNotifierProvider<BrowseViewModel>(
           create: (_) => BrowseViewModel(),
         ),
@@ -56,12 +76,28 @@ class MyApp extends StatelessWidget {
             "/home": (_) => const HomePage(),
             "/about": (_) => const AboutPage(),
 
-            "/browse": (_) => const BrowseView(),
+            "/browse": (_) => BrowseView(),
             "/search": (_) => const SearchView(),
             "/favourites": (_) => const FavouritesPage(),
+
+            "/station": (_) => const StationView(),
+
           }
         );
       }),
     );
+
+
   }
+
+  getBrowseList() async {
+
+    try {
+      await _browseService.getBrowseList([]);
+    }
+    catch(ex, st) {
+      _logger.e("Failed to get browse list", ex, st);
+    }
+  }
+
 }
