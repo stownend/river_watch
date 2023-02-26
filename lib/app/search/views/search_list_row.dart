@@ -76,7 +76,7 @@ class SearchListRowState extends State<SearchListRow> {
                     Navigator.pushNamed(
                       context, 
                       "/station", 
-                      arguments: ViewArgument(argString: "", argInt: stations[index].id, navNameOverride: ""));
+                      arguments: ViewArgument(argString: "", argInt: stations[index].id, navNameOverride: "Search"));
 
                   },
                   title: Text(stations[index].label),
