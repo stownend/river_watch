@@ -7,6 +7,7 @@ const String API_BASE = "https://services.riverwatchapp.co.uk";
 const String API_BROWSE = "api/browse";
 const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";
 const String API_SEARCH_STATIONS = "api/browse/searchAll";
+const String API_FAVOURITES = "api/user/myStations";
 
 //#endregion APIs
 
@@ -17,3 +18,9 @@ const ERR_INVALID_FORMAT = 102;
 const ERR_UNKNOWN_ERROR = 103;
 const ERR_UNEXPECTED_ERROR = 104;
 //#endregion Errors
+
+enum FavouriteCategory {
+  TooDeep,
+  Ideal,
+  TooShallow
+}

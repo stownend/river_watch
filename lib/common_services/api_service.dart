@@ -41,4 +41,33 @@ class ApiService {
       return Failure(code: ERR_UNKNOWN_ERROR, errorResponse: "Unknown error getting data");
     }
   }
+
+  Future<Object> fetchPostData(String url, Function(String) parser) async {
+      //throw Exception('Failed to load data from: $url');
+    var _logger = _loggingService.getLogger(this);
+
+    //await Future.delayed(const Duration(seconds: 15));
+
+    try {
+      final response = await http.post(Uri.parse("$API_BASE/$url"));
+
+      if (response.statusCode == 200) {
+        return Success(response: parser(response.body));
+      } else {
+        _logger.e("Error calling $url - status: ${response.statusCode}");
+        return Failure(code: ERR_INVALID_API_RESPONSE, errorResponse: "Invalid response");
+      }
+    } on HttpException {
+      return Failure(code: ERR_NO_INTERNET, errorResponse: "No Internet");
+    } on SocketException {
+      return Failure(code: ERR_NO_INTERNET, errorResponse: "No internet");
+    } on http.ClientException {
+      return Failure(code: ERR_NO_INTERNET, errorResponse: "No internet");
+    } on FormatException {
+      return Failure(code: ERR_INVALID_FORMAT, errorResponse: "Invalid format");
+    } catch (ex, st) {
+      _logger.e("Unknown error calling $url", ex, st);
+      return Failure(code: ERR_UNKNOWN_ERROR, errorResponse: "Unknown error getting data");
+    }
+  }
 }

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../../common_models/view_argument.dart';
 import '../../components/app_bar_and_nav_bar_scaffold.dart';
 
 class StationView extends StatelessWidget {
@@ -10,10 +11,12 @@ class StationView extends StatelessWidget {
   Widget build(BuildContext context) {
     
     var args = ModalRoute.of(context)!.settings.arguments;
-    var stationId = args == null ? 0 : args as int;
+    var viewArgs = args == null ? null : args as ViewArgument;
+    var stationId = viewArgs == null ? 0 : viewArgs.argInt;
+    String navNameOverride = viewArgs == null ? "" : viewArgs.navNameOverride;
 
     return AppBarAndNavBarScaffold(
-      navName: "Site",
+      navName: "Site", navNameOverride: navNameOverride,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

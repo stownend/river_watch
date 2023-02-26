@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'app/browse/repositories/browse_service.dart';
 import 'app/browse/view_models/browse_view_model.dart';
+import 'app/favourites/view_models/favourites_view_model.dart';
 import 'app/home/home_page.dart';
 import 'app/home/about_page.dart';
 import 'app/material_app_builder.dart';
@@ -18,7 +19,7 @@ import 'ioc.dart';
 import 'common_services/color_service.dart';
 import 'app/browse/views/browse_view.dart';
 import 'app/search/views/search_view.dart';
-import 'app/pages/favourites_page.dart';
+import 'app/favourites/views/favourites_view.dart';
 
 void main() {
   getServices();
@@ -52,6 +53,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<BrowseViewModel>(
           create: (_) => BrowseViewModel(),
         ),
+        ChangeNotifierProvider<FavouritesViewModel>(
+          create: (_) => FavouritesViewModel(),
+        ),
       ],
       child: MaterialAppBuilder(builder: (context) {
         var _colorService = getIt.get<ColorService>();
@@ -78,7 +82,7 @@ class MyApp extends StatelessWidget {
 
             "/browse": (_) => BrowseView(),
             "/search": (_) => const SearchView(),
-            "/favourites": (_) => const FavouritesPage(),
+            "/favourites": (_) => const FavouritesView(),
 
             "/station": (_) => const StationView(),
 

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../components/app_bar_and_nav_bar_scaffold.dart';
 import '../../components/app_error.dart';
 import '../../components/app_loading.dart';
-import '../../components/search_list_row.dart';
+import 'search_list_row.dart';
 import '../view_models/search_view_model.dart';
 
 class SearchView extends StatefulWidget {

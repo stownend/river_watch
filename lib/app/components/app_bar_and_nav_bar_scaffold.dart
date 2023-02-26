@@ -8,9 +8,10 @@ import '../../common_services/app_settings_service.dart';
 
 class AppBarAndNavBarScaffold extends StatelessWidget {
 
-  const AppBarAndNavBarScaffold({super.key, required this.body, this.navName});
+  const AppBarAndNavBarScaffold({super.key, required this.body, this.navName, this.navNameOverride = ""});
   final Widget body;
   final String? navName;
+  final String navNameOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class AppBarAndNavBarScaffold extends StatelessWidget {
           type: BottomNavigationBarType.fixed, // Prevents background going to white when "shifting" e.g. more than 3 icons
 
           unselectedItemColor: Colors.grey[500],
-          currentIndex: _appSettingsService.getRouteIndexByUiName(navName?? "Home"),
+          currentIndex: _appSettingsService.getRouteIndexByUiName(navNameOverride == "" ? navName?? "Home" : navNameOverride),
 
           items: navBarItems,
           onTap: (index)

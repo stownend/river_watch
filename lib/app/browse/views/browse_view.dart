@@ -7,7 +7,7 @@ import '../../../ioc.dart';
 import '../../components/app_bar_and_nav_bar_scaffold.dart';
 import '../../components/app_error.dart';
 import '../../components/app_loading.dart';
-import '../../components/browse_list_row.dart';
+import 'browse_list_row.dart';
 import '../models/browse_list.dart';
 import '../repositories/browse_service.dart';
 import '../view_models/browse_view_model.dart';

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../common_services/app_settings_service.dart';
-import '../../common_services/logging_service.dart';
-import '../../ioc.dart';
-import '../browse/models/browse_list.dart';
-import '../browse/repositories/browse_service.dart';
+import '../../../common_models/view_argument.dart';
+import '../../../common_services/app_settings_service.dart';
+import '../../../common_services/logging_service.dart';
+import '../../../ioc.dart';
+import '../models/browse_list.dart';
+import '../repositories/browse_service.dart';
 
 // ignore: must_be_immutable
 class BrowseListRow extends StatelessWidget {
@@ -51,7 +52,7 @@ class BrowseListRow extends StatelessWidget {
                       Navigator.pushNamed(
                         context, 
                         "/station", 
-                        arguments: browseList.ids[index]);
+                        arguments: ViewArgument(argString: "", argInt: browseList.ids[index], navNameOverride: "Browse"));
 
                     } else {
 

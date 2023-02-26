@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../common_services/app_settings_service.dart';
-import '../../common_services/logging_service.dart';
-import '../../ioc.dart';
-import '../search/models/search_station_list.dart';
-import '../search/view_models/search_view_model.dart';
+import '../../../common_models/view_argument.dart';
+import '../../../common_services/app_settings_service.dart';
+import '../../../common_services/logging_service.dart';
+import '../../../ioc.dart';
+import '../models/search_station_list.dart';
+import '../view_models/search_view_model.dart';
 
 class SearchListRow extends StatefulWidget {
   const SearchListRow({super.key, required this.searchViewModel});
@@ -75,7 +76,7 @@ class SearchListRowState extends State<SearchListRow> {
                     Navigator.pushNamed(
                       context, 
                       "/station", 
-                      arguments: stations[index].id);
+                      arguments: ViewArgument(argString: "", argInt: stations[index].id, navNameOverride: ""));
 
                   },
                   title: Text(stations[index].label),
