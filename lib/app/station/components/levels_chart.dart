@@ -15,6 +15,8 @@ const double BOTTOM_MARGIN = 50;
 
 const double TICK_LENGTH = 10;
 
+const int DAYS_HISTORY = 14;
+
 class LevelsChart extends StatefulWidget {
   const LevelsChart({super.key, required this.readings, required this.maxOnRecord, required this.typicalRangeLow, required this.typicalRangeHigh, required this.thresholds});
 
@@ -59,9 +61,9 @@ class _LevelsChartState extends State<LevelsChart> {
 
 class ChartPainter extends CustomPainter{
 
-  ChartPainter(this._readings, this._maxOnRecord, this._typicalRangeLow, this._typicalRangeHigh, this._thresholds);
+  ChartPainter(this._readings_orig, this._maxOnRecord, this._typicalRangeLow, this._typicalRangeHigh, this._thresholds);
 
-  final List<LatestReading> _readings;
+  final List<LatestReading> _readings_orig;
   final double _maxOnRecord;
   final double _typicalRangeLow;
   final double _typicalRangeHigh;
@@ -70,6 +72,8 @@ class ChartPainter extends CustomPainter{
   late double _chartWidth;
   late double _chartHeight;
   late ChartBounds _bounds;
+
+  late List<LatestReading> _readings;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -84,6 +88,9 @@ class ChartPainter extends CustomPainter{
 
     _chartHeight = height - (BOTTOM_MARGIN + TOP_MARGIN);
     _chartWidth = width - (LEFT_MARGIN + RIGHT_MARGIN);
+
+    _readings_orig.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    _readings = _readings_orig.where((element) => element.dateTime.compareTo(DateTime.now().add(const Duration(days: -DAYS_HISTORY)))>= 0).toList();
 
     _bounds = ChartBounds.fromConfig(_readings, _maxOnRecord, _typicalRangeLow, _typicalRangeHigh, _chartWidth, _chartHeight, _thresholds);
 
@@ -101,18 +108,36 @@ class ChartPainter extends CustomPainter{
     }
 
     // Readings
-    _readings.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-    var chartPath = Path();
-    chartPath.MoveToPoint(_point(0, _bounds.Min));
-    int p;
-    for (p = 0; p < _readings.length; p++)
     {
-        chartPath.LineToPoint(_point(p as double, _readings[p].value));
+      var chartPath = Path();
+      var startPoint = _point(0, _bounds.Min);
+      chartPath.MoveToPoint(startPoint);
+      int p;
+      for (p = 0; p < _readings.length; p++)
+      {
+          chartPath.LineToPoint(_point(p as double, _readings[p].value));
+      }
+      chartPath.LineToPoint(_point((p -1) as double, _bounds.Min));
+      chartPath.LineToPoint(startPoint);
+
+      canvas.drawPath(chartPath, PaintBrushes.chartFillPaint);
     }
-    chartPath.LineToPoint(_point(p as double, _bounds.Min));
-    chartPath.LineToPoint(_point(0, _bounds.Min));
-    canvas.drawPath(chartPath, PaintBrushes.chartFillPaint);
-    canvas.drawPath(chartPath, PaintBrushes.chartEdgePaint);
+
+    {
+      var chartPath = Path();
+      var startPoint = _point(0, _bounds.Min);
+      chartPath.MoveToPoint(startPoint);
+      int p;
+      for (p = 0; p < _readings.length; p++)
+      {
+          chartPath.LineToPoint(_point(p as double, _readings[p].value));
+      }
+      chartPath.LineToPoint(_point((p - 1)as double, _bounds.Min));
+      chartPath.LineToPoint(startPoint);
+
+      canvas.drawPath(chartPath, PaintBrushes.chartEdgePaint);
+
+    }
 
     // Y axis
 
@@ -149,7 +174,7 @@ class ChartPainter extends CustomPainter{
     // X Axis
 
     // Value at each day
-    for (int yTick = 0; yTick < _readings.length; yTick += (_readings.length / 14).round())
+    for (int yTick = 0; yTick < _readings.length; yTick += (_readings.length / DAYS_HISTORY).round())
     {
         var yStart = _point(yTick as double, _bounds.Min).Y;
         var yEnd = _point(yTick as double, _bounds.Max).Y;
@@ -164,7 +189,7 @@ class ChartPainter extends CustomPainter{
 
     }
 
-    for (int dateIndex = (_readings.length / 28).round(); dateIndex < _readings.length; dateIndex += (_readings.length / 14).round())
+    for (int dateIndex = (_readings.length / 28).round(); dateIndex < _readings.length; dateIndex += (_readings.length / DAYS_HISTORY).round())
     {
         // Label
         var dateLabel = intl.DateFormat("E").format(_readings[dateIndex].dateTime);
@@ -211,10 +236,12 @@ class PaintBrushes {
     ..style = PaintingStyle.stroke;
 
   static Paint chartFillPaint = Paint()
-    ..color = const Color(0x77acd1e7);
+    ..color = const Color(0x77acd1e7)
+    ..style = PaintingStyle.fill;
 
   static Paint chartEdgePaint = Paint()
-    ..color = const Color(0xffacd1e7)
+//    ..color = const Color(0xffacd1e7)
+    ..color = Colors.blue
     ..strokeWidth = 1
     ..style = PaintingStyle.stroke;
 

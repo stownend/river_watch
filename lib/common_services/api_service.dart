@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names
 
 import 'dart:convert';
 import 'dart:io';
@@ -14,6 +14,16 @@ class ApiService {
   
   final _loggingService = getIt.get<LoggingService>();
 
+  String _api_base = "";
+
+  ApiService() {
+    if (isProduction) {
+      _api_base = API_BASE_PROD;
+    } else {
+      _api_base = API_BASE_DEV;
+    }
+  }
+
   Future<Object> fetchData(String url, Function(String) parser) async {
       //throw Exception('Failed to load data from: $url');
     var _logger = _loggingService.getLogger(this);
@@ -21,7 +31,7 @@ class ApiService {
     //await Future.delayed(const Duration(seconds: 15));
 
     try {
-      final response = await http.get(Uri.parse("$API_BASE/$url"));
+      final response = await http.get(Uri.parse("$_api_base/$url"));
 
       if (response.statusCode == 200) {
         return Success(response: parser(response.body));
@@ -51,7 +61,7 @@ class ApiService {
 
     try {
       final response = await http.post(
-        Uri.parse("$API_BASE/$url"), 
+        Uri.parse("$_api_base/$url"), 
         headers: {"Content-Type": "application/json"},
         body: json.encode(body)
       );

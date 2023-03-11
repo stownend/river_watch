@@ -1,8 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
 //#region APIs
-const String API_BASE = "https://services.riverwatchapp.co.uk";
-//const String API_BASE = "http://localhost:55275";
+
+const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
+const String API_BASE_PROD = "https://services.riverwatchapp.co.uk";
+const String API_BASE_DEV = "http://localhost:55275";
 
 const String API_BROWSE = "api/browse";
 const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";
