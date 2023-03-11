@@ -8,6 +8,7 @@ const String API_BROWSE = "api/browse";
 const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";
 const String API_SEARCH_STATIONS = "api/browse/searchAll";
 const String API_FAVOURITES = "api/user/myStations";
+const String API_STATION = "api/station";
 
 //#endregion APIs
 

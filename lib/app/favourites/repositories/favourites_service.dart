@@ -28,7 +28,7 @@ class FavouritesService {
 
     try {
       if (_favourites.isEmpty) {
-        var favouritesResponse = await _apiService.fetchPostData("$API_FAVOURITES/$deviceId", favouritesListFromJson);
+        var favouritesResponse = await _apiService.fetchPostData("$API_FAVOURITES/$deviceId", null, favouritesListFromJson);
         
         if (favouritesResponse is Success) {
           _favourites = favouritesResponse.response as List<FavouritesList>;  

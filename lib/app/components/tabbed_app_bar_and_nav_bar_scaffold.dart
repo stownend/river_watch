@@ -29,7 +29,7 @@ class TabbedAppBarAndNavBarScaffold extends StatelessWidget {
             indicatorColor: Colors.white ,
             tabs: [
               Tab(text: "Info"),
-              Tab(text: "Map"),
+              Tab(text: "Location"),
               Tab(text: "Thresholds"),
             ],
           ),

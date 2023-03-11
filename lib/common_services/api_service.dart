@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -42,14 +43,18 @@ class ApiService {
     }
   }
 
-  Future<Object> fetchPostData(String url, Function(String) parser) async {
+  Future<Object> fetchPostData(String url, Map? body, Function(String) parser) async {
       //throw Exception('Failed to load data from: $url');
     var _logger = _loggingService.getLogger(this);
 
     //await Future.delayed(const Duration(seconds: 15));
 
     try {
-      final response = await http.post(Uri.parse("$API_BASE/$url"));
+      final response = await http.post(
+        Uri.parse("$API_BASE/$url"), 
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body)
+      );
 
       if (response.statusCode == 200) {
         return Success(response: parser(response.body));

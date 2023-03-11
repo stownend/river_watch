@@ -13,6 +13,7 @@ import 'app/home/home_page.dart';
 import 'app/home/about_page.dart';
 import 'app/material_app_builder.dart';
 import 'app/search/view_models/search_view_model.dart';
+import 'app/station/view_models/station_view_model.dart';
 import 'app/station/views/station_view.dart';
 import 'common_services/logging_service.dart';
 import 'ioc.dart';
@@ -55,6 +56,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<FavouritesViewModel>(
           create: (_) => FavouritesViewModel(),
+        ),
+        ChangeNotifierProvider<StationViewModel>(
+          create: (_) => StationViewModel(),
         ),
       ],
       child: MaterialAppBuilder(builder: (context) {
