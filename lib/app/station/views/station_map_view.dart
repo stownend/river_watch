@@ -11,15 +11,13 @@ class StationMapView extends StatefulWidget {
   final StationViewModel viewModel;
 
   @override
-  // ignore: no_logic_in_create_state
-  State<StatefulWidget> createState() => StationMapViewState(viewModel: viewModel);
+  State<StatefulWidget> createState() => StationMapViewState();
 
 }
 
 class StationMapViewState extends State<StationMapView> {
-  StationMapViewState({required this.viewModel });
 
-  final StationViewModel viewModel;
+  late StationViewModel viewModel = widget.viewModel;
 
   late GoogleMapController mapController;
   final List<Marker> _markers = [];

@@ -68,4 +68,58 @@ class StationViewModel extends ChangeNotifier
 
     setLoading(false);
   }
+
+  String getLatestLevel(Station? station) {
+
+    String latestLevel = "";
+
+    if (station == null || station.latestReadings.isEmpty) {
+      return latestLevel;
+    }
+
+    station.latestReadings.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+    var latestReading = station.latestReadings[0];
+    latestLevel = "${latestReading.value.toStringAsFixed(2)}m at ${getFormattedTime(latestReading.dateTime)} on ${getFormattedDate(latestReading.dateTime)}";
+
+    return latestLevel;
+  }
+
+  String getFormattedTime(DateTime date) {
+    String time = "";
+
+    if (date.hour < 12) {
+      time = "${date.hour}:${date.minute} am";
+    } else {
+      time = "${date.hour > 12 ? date.hour - 12 : date.hour}:${date.minute} pm";
+    }
+
+    return time;
+  }
+
+  String getFormattedDate(DateTime date) {
+
+    List<String> days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    String formattedDate = "";
+
+    formattedDate = "${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}";
+
+    return formattedDate;
+  }
+
+  String getHighestLevel(Station? station) {
+
+    String highestLevel = "";
+
+    if (station == null) {
+      return highestLevel;
+    }
+
+    highestLevel = "${station.maxValue.toStringAsFixed(2)}m at ${getFormattedTime(station.maxDateTime)} on ${getFormattedDate(station.maxDateTime)}";
+
+    return highestLevel;
+  }
+
 }

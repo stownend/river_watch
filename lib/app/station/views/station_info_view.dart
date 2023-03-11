@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../components/levels_chart.dart';
-import '../models/station.dart';
 import '../view_models/station_view_model.dart';
 
 class StationInfoView extends StatelessWidget {
@@ -13,58 +12,7 @@ class StationInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String getFormattedTime(DateTime date) {
-      String time = "";
 
-      if (date.hour < 12) {
-        time = "${date.hour}:${date.minute} am";
-      } else {
-        time = "${date.hour > 12 ? date.hour - 12 : date.hour}:${date.minute} pm";
-      }
-
-      return time;
-    }
-
-    String getFormattedDate(DateTime date) {
-
-      List<String> days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-      List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-      String formattedDate = "";
-
-      formattedDate = "${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}";
-
-      return formattedDate;
-    }
-
-    String getLatestLevel(Station? station) {
-
-      String latestLevel = "";
-
-      if (station == null || station.latestReadings.isEmpty) {
-        return latestLevel;
-      }
-
-      station.latestReadings.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-
-      var latestReading = station.latestReadings[0];
-      latestLevel = "${latestReading.value.toStringAsFixed(2)}m at ${getFormattedTime(latestReading.dateTime)} on ${getFormattedDate(latestReading.dateTime)}";
-
-      return latestLevel;
-    }
-
-    String getHighestLevel(Station? station) {
-
-      String highestLevel = "";
-
-      if (station == null) {
-        return highestLevel;
-      }
-
-      highestLevel = "${station.maxValue.toStringAsFixed(2)}m at ${getFormattedTime(station.maxDateTime)} on ${getFormattedDate(station.maxDateTime)}";
-
-      return highestLevel;
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,19 +39,19 @@ class StationInfoView extends StatelessWidget {
               DataRow(
                 cells: <DataCell>[
                   const DataCell(Text("Latest Level", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataCell(Text(getLatestLevel(viewModel.station))),
+                  DataCell(Text(viewModel.getLatestLevel(viewModel.station))),
                 ]
               ),
               DataRow(
                 cells: <DataCell>[
                   const DataCell(Text("Highest Recorded", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataCell(Text(getHighestLevel(viewModel.station))),
+                  DataCell(Text(viewModel.getHighestLevel(viewModel.station))),
                 ]
               ),
               DataRow(
                 cells: <DataCell>[
                   const DataCell(Text("Opened on", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataCell(Text(getFormattedDate(viewModel.station!.dateOpened))),
+                  DataCell(Text(viewModel.getFormattedDate(viewModel.station!.dateOpened))),
                 ]
               ),
               DataRow(
