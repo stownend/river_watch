@@ -9,6 +9,7 @@ import 'common_services/app_settings_service.dart';
 import 'common_services/api_service.dart';
 import 'common_services/logging_service.dart';
 import 'common_services/color_service.dart';
+import 'common_services/user_service.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -19,6 +20,7 @@ void getServices() {
   getIt.registerFactory(() => LoggingService());
   getIt.registerFactory(() => AppSettingsService());
   getIt.registerFactory(() => ApiService());  
+  getIt.registerFactory(() => UserService());  
 
   getIt.registerLazySingleton(() => BrowseService());
   getIt.registerFactory(() => SearchService());

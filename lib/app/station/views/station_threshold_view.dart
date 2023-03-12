@@ -1,9 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../common_models/constants.dart';
+import '../../../common_services/user_service.dart';
+import '../../../ioc.dart';
+import '../models/station.dart';
 import '../view_models/station_view_model.dart';
 
 class StationThresholdView extends StatefulWidget {
@@ -21,6 +26,8 @@ class StationThresholdViewState extends State<StationThresholdView> {
 
   final _formKey = GlobalKey<FormState>();
 
+  final _userService = getIt.get<UserService>();
+
   @override
   void initState() {
     super.initState();
@@ -29,13 +36,25 @@ class StationThresholdViewState extends State<StationThresholdView> {
   @override
   Widget build(BuildContext context) {
 
-    var _currentHighThreshold = viewModel.station!.thresholds!.high;
-    var _currentLowThreshold = viewModel.station!.thresholds!.low;
+    double _currentHighThreshold = 0;
+    double _currentLowThreshold = 0;
+    bool _currentNotify = true;
+    
+    if (viewModel.station!.thresholds != null) {
+      _currentHighThreshold = viewModel.station!.thresholds!.high;
+      _currentLowThreshold = viewModel.station!.thresholds!.low;
+      _currentNotify = viewModel.station!.thresholds!.notify;
+    }
 
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
+        child: viewModel.station!.latestReadings.isEmpty ? 
+          Text(
+            "Sorry! This site has not reported any data. Therefore its thresholds can't be changed at present.", 
+            style: Theme.of(context).textTheme.bodyMedium
+          ) : 
+          Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -68,7 +87,7 @@ class StationThresholdViewState extends State<StationThresholdView> {
                       children: [
                         TextFormField(
                           decoration: const InputDecoration(labelText: "High Water Threshold (in Metres)"),
-                          initialValue: viewModel.station!.thresholds!.high.toString(),
+                          initialValue: _currentHighThreshold.toString(),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
@@ -86,13 +105,13 @@ class StationThresholdViewState extends State<StationThresholdView> {
                             }
                           },
                           onSaved: (val) => setState(() => 
-                            viewModel.station!.thresholds!.high = double.parse(val!)
+                            _currentHighThreshold = double.parse(val!)
                           ),
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
                           decoration: const InputDecoration(labelText: "Low Water Threshold (in Metres)"),
-                          initialValue: viewModel.station!.thresholds!.low.toString(),
+                          initialValue: _currentLowThreshold.toString(),
                           inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
                           ],
@@ -109,7 +128,7 @@ class StationThresholdViewState extends State<StationThresholdView> {
                             }
                           },
                           onSaved: (val) => setState(() => 
-                            viewModel.station!.thresholds!.low = double.parse(val!)
+                            _currentLowThreshold = double.parse(val!)
                           ),
                         ),
 
@@ -122,9 +141,9 @@ class StationThresholdViewState extends State<StationThresholdView> {
                       "Receive alerts when your thresholds are breached?",
                       style: Theme.of(context).textTheme.bodySmall
                     ), 
-                    value: viewModel.station!.thresholds!.notify, 
+                    value: _currentNotify, 
                     onChanged: (bool val) {
-                      setState(() => viewModel.station!.thresholds!.notify = val);
+                      setState(() => _currentNotify = val);
                     }
                   ),
                   Container(
@@ -140,11 +159,37 @@ class StationThresholdViewState extends State<StationThresholdView> {
 
                             if (form!.validate()) {
                               form.save();
-//                              _presenter.saveThresholds(viewModel.station!.measureId, viewModel.station!.thresholds);
-                              await viewModel.saveThresholds(viewModel.station!.measureId, viewModel.station!.thresholds!);
-                              showSuccessMessage();
-                              // ignore: use_build_context_synchronously
-                              //_showDialog(context);
+                              try {
+                                Thresholds newThresholds;
+                                if (viewModel.station!.thresholds != null) {
+                                  // Create a clone of the current thresholds
+                                  newThresholds = Thresholds.fromJson(json.decode(json.encode(viewModel.station!.thresholds)));
+                                } else {
+                                  newThresholds = Thresholds(
+                                    id: 0, 
+                                    stationId: viewModel.station!.id, 
+                                    deviceId: _userService.user.id, 
+                                    installId: "", 
+                                    os: "", 
+                                    low: 0, 
+                                    high: 0, 
+                                    notify: true, 
+                                    lastNotified: DateTime.now()
+                                  );
+                                }
+
+                                newThresholds.low = _currentLowThreshold;
+                                newThresholds.high = _currentHighThreshold;
+                                newThresholds.notify = _currentNotify;
+
+                                newThresholds.id = await viewModel.saveThresholds(viewModel.station!.measureId, newThresholds);
+
+                                viewModel.station!.thresholds = newThresholds;
+
+                                showMessage(message: "Site settings saved successfully!");
+                              } catch (e) {
+                                showMessage(message: "Error saving site settings!", failed: true);
+                              }
                             }
                           },
                           child: viewModel.saving ? const Text("Saving...") : const Text("Save as Favourite")
@@ -156,9 +201,16 @@ class StationThresholdViewState extends State<StationThresholdView> {
                         ),
                         const SizedBox(height: 10),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: viewModel.deleting ? null : () async {
+                            try {
+                              await viewModel.deleteFavourite(viewModel.station!.id, viewModel.station!.thresholds!.deviceId);
+                              viewModel.station!.thresholds = null;
+                              showMessage(message: "Site is no longer a favourite!");
+                            } catch (e) {
+                              showMessage(message: "Error removing site as a favourite!", failed: true);
+                            }
                           },
-                          child: Row(
+                          child: viewModel.deleting ? const Text("Deleting...") : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
                               Text("Remove from Favourites "),
@@ -186,7 +238,12 @@ class StationThresholdViewState extends State<StationThresholdView> {
     return double.tryParse(s) != null;
   }
   
-  void showSuccessMessage() {
-    snackbarKey.currentState?.showSnackBar(const SnackBar(content: Text("Thresholds saved successfully!")));
+  void showMessage({required String message, bool failed = false}) {
+    snackbarKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: failed ? Colors.red : Colors.green,
+      )
+    );
   }
 }

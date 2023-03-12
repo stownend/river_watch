@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import '../../../common_models/api_status.dart';
 import '../../../common_models/constants.dart';
 import '../../../common_services/logging_service.dart';
+import '../../../common_services/user_service.dart';
 import '../../../ioc.dart';
 import '../models/station.dart';
 import '../repositories/station_service.dart';
@@ -12,6 +13,8 @@ class StationViewModel extends ChangeNotifier
 {
   final _stationService = getIt.get<StationService>();
   final _loggingService = getIt.get<LoggingService>();
+  final _userService = getIt.get<UserService>();
+  
   late Logger _logger;
 
   StationViewModel() {
@@ -20,6 +23,7 @@ class StationViewModel extends ChangeNotifier
 
   bool _loading = false;
   bool _saving = false;
+  bool _deleting = false;
   bool _hasError = false;
   Station? _station;
   Failure? _browseError;
@@ -27,6 +31,7 @@ class StationViewModel extends ChangeNotifier
 
   bool get loading => _loading;
   bool get saving => _saving;
+  bool get deleting => _deleting;
   bool get hasError => _hasError;
   Station? get station => _station;
   Failure get browseError => _browseError??Failure();
@@ -38,6 +43,11 @@ class StationViewModel extends ChangeNotifier
 
   setSaving(bool saving) async {
     _saving = saving;
+    notifyListeners(); // Update the UI
+  }
+
+  setDeleting(bool deleting) async {
+    _deleting = deleting;
     notifyListeners(); // Update the UI
   }
 
@@ -58,10 +68,10 @@ class StationViewModel extends ChangeNotifier
       Station? station;
 
       // If we have user info
-      var deviceId = "2a1cd97945f7cc66";
+      var userId = _userService.user.id;
 
-      if (deviceId != "") {
-        station = await _stationService.getMyStation(stationId, deviceId);
+      if (userId != "") {
+        station = await _stationService.getMyStation(stationId, userId);
       } else {
         station = await _stationService.getStation(stationId);
       }
@@ -76,19 +86,35 @@ class StationViewModel extends ChangeNotifier
     setLoading(false);
   }
 
-  Future saveThresholds(int measureId, Thresholds thresholds) async {
+  Future<int> saveThresholds(int measureId, Thresholds thresholds) async {
     setSaving(true);
 
     try {
-        await _stationService.saveThresholds(measureId, thresholds);
+        var newId = await _stationService.saveThresholds(measureId, thresholds);
+        return newId;
     }
     catch(ex, st) {
       _logger.e("Failed to save thresholds", ex, st);
-      Failure browseError = Failure(code: ERR_UNEXPECTED_ERROR, errorResponse: ex.toString());
-      setBrowseError(browseError);
+      rethrow;
+    } finally {
+      setSaving(false);
     }
 
-    setSaving(false);
+  }
+
+  Future deleteFavourite(int stationId, String userId) async {
+    setDeleting(true);
+
+    try {
+        await _stationService.deleteFavourite(stationId, userId);
+    }
+    catch(ex, st) {
+      _logger.e("Failed to delete favourite", ex, st);
+      rethrow;
+    } finally {
+      setDeleting(false);
+    }
+
   }
 
   String getLatestLevel(Station? station) {

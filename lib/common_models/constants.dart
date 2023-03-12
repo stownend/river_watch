@@ -15,6 +15,7 @@ const String API_SEARCH_STATIONS = "api/browse/searchAll";
 const String API_FAVOURITES = "api/user/myStations";
 const String API_STATION = "api/station";
 const String API_SAVE_THRESHOLDS = "api/user/saveThresholds";
+const String API_DELETE_FAVOURITE = "api/user/StopMonitoring";
 
 //#endregion APIs
 
