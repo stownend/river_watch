@@ -73,7 +73,7 @@ class StationThresholdViewState extends State<StationThresholdView> {
             ),
             const SizedBox(height: 20),
             Text(
-              "Your site settings: -",
+              "Your site settings for ${viewModel.station!.name}: -",
               style: Theme.of(context).textTheme.titleSmall,
             ),
             Form(
