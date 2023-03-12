@@ -15,6 +15,7 @@ import 'app/material_app_builder.dart';
 import 'app/search/view_models/search_view_model.dart';
 import 'app/station/view_models/station_view_model.dart';
 import 'app/station/views/station_view.dart';
+import 'common_models/constants.dart';
 import 'common_services/logging_service.dart';
 import 'ioc.dart';
 import 'common_services/color_service.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
         // }
         
         return MaterialApp(
+          scaffoldMessengerKey: snackbarKey,
           theme: ThemeData(primarySwatch: MaterialColor(0xFF2196F3, _colorService.colorSwatchShades)),
           debugShowCheckedModeBanner: false,
           initialRoute: "/home",

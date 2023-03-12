@@ -53,7 +53,7 @@ class ApiService {
     }
   }
 
-  Future<Object> fetchPostData(String url, Map? body, Function(String) parser) async {
+  Future<Object> fetchPostData(String url, dynamic body, Function(String) parser) async {
       //throw Exception('Failed to load data from: $url');
     var _logger = _loggingService.getLogger(this);
 

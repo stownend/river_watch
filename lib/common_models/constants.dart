@@ -2,6 +2,8 @@
 
 //#region APIs
 
+import 'package:flutter/material.dart';
+
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 const String API_BASE_PROD = "https://services.riverwatchapp.co.uk";
@@ -12,6 +14,7 @@ const String API_STATIONS_IN_RIVER = "api/browse/stationsinriver";
 const String API_SEARCH_STATIONS = "api/browse/searchAll";
 const String API_FAVOURITES = "api/user/myStations";
 const String API_STATION = "api/station";
+const String API_SAVE_THRESHOLDS = "api/user/saveThresholds";
 
 //#endregion APIs
 
@@ -28,3 +31,6 @@ enum FavouriteCategory {
   Ideal,
   TooShallow
 }
+
+// Used to show snackbar without context
+final GlobalKey<ScaffoldMessengerState> snackbarKey = GlobalKey<ScaffoldMessengerState>();

@@ -19,18 +19,25 @@ class StationViewModel extends ChangeNotifier
   }
 
   bool _loading = false;
+  bool _saving = false;
   bool _hasError = false;
   Station? _station;
   Failure? _browseError;
   
 
   bool get loading => _loading;
+  bool get saving => _saving;
   bool get hasError => _hasError;
   Station? get station => _station;
   Failure get browseError => _browseError??Failure();
 
   setLoading(bool loading) async {
     _loading = loading;
+    notifyListeners(); // Update the UI
+  }
+
+  setSaving(bool saving) async {
+    _saving = saving;
     notifyListeners(); // Update the UI
   }
 
@@ -67,6 +74,21 @@ class StationViewModel extends ChangeNotifier
     }
 
     setLoading(false);
+  }
+
+  Future saveThresholds(int measureId, Thresholds thresholds) async {
+    setSaving(true);
+
+    try {
+        await _stationService.saveThresholds(measureId, thresholds);
+    }
+    catch(ex, st) {
+      _logger.e("Failed to save thresholds", ex, st);
+      Failure browseError = Failure(code: ERR_UNEXPECTED_ERROR, errorResponse: ex.toString());
+      setBrowseError(browseError);
+    }
+
+    setSaving(false);
   }
 
   String getLatestLevel(Station? station) {

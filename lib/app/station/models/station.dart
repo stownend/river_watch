@@ -38,7 +38,7 @@ class Station {
     String label;
     int measureId;
     List<LatestReading> latestReadings;
-    Thresholds thresholds;
+    Thresholds? thresholds;
     int id;
     String name;
     String itemUrl;
@@ -63,7 +63,7 @@ class Station {
         label: json["label"],
         measureId: json["measureId"],
         latestReadings: List<LatestReading>.from(json["latestReadings"].map((x) => LatestReading.fromJson(x))),
-        thresholds: Thresholds.fromJson(json["thresholds"]),
+        thresholds: json["thresholds"] == null ? null : Thresholds.fromJson(json["thresholds"]),
         id: json["id"],
         name: json["name"],
         itemUrl: json["itemUrl"],
@@ -89,7 +89,7 @@ class Station {
         "label": label,
         "measureId": measureId,
         "latestReadings": List<dynamic>.from(latestReadings.map((x) => x.toJson())),
-        "thresholds": thresholds.toJson(),
+        "thresholds": thresholds!.toJson(),
         "id": id,
         "name": name,
         "itemUrl": itemUrl,

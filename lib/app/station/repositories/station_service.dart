@@ -74,4 +74,31 @@ class StationService {
     }
     
   }
+
+  Future saveThresholds(int measureId, Thresholds thresholds) async {
+
+    try {
+
+        var response = await _apiService.fetchPostData("$API_SAVE_THRESHOLDS/$measureId", thresholds, dummyHandler);
+        
+        // if (response is Success) {
+        //   _station = response.response as Station;  
+        // }
+
+        if (response is Failure) {
+          throw(response.errorResponse);
+        }
+
+    } 
+    catch (ex, st) {
+      _logger.e("Failed to save thresholds", ex, st);
+      rethrow;
+    }
+
+  }
+
+  dummyHandler(data) {
+    /* Don't need to process data */
+    return {};
+  }
 }
